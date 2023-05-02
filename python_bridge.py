@@ -26,7 +26,7 @@ from pathlib import Path
 from epc.server import ThreadingEPCServer
 from utils import (init_epc_client, eval_in_emacs, logger, close_epc_client)
 
-class MindWave:
+class PythonBridge:
     def __init__(self, args):
         # Init EPC client port.
         init_epc_client(int(args[0]))
@@ -103,7 +103,6 @@ if __name__ == "__main__":
     if len(sys.argv) >= 3:
         import cProfile
         profiler = cProfile.Profile()
-        profiler.run("MindWave(sys.argv[1:])")
+        profiler.run("PythonBridge(sys.argv[1:])")
     else:
-        MindWave(sys.argv[1:])
-    
+        PythonBridge(sys.argv[1:])
