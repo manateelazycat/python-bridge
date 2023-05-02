@@ -86,8 +86,8 @@
   "The Python-Bridge Server.")
 
 (defvar python-bridge-python-file (expand-file-name "python_bridge.py" (if load-file-name
-                                                                   (file-name-directory load-file-name)
-                                                                 default-directory)))
+                                                                           (file-name-directory load-file-name)
+                                                                         default-directory)))
 
 (defvar python-bridge-server-port nil)
 
@@ -157,10 +157,16 @@ Then Python-Bridge will start by gdb, please send new issue with `*python-bridge
 
 (defun python-bridge-call-async (method &rest args)
   "Call Python EPC function METHOD and ARGS asynchronously."
-  (python-bridge-deferred-chain
-    (python-bridge-epc-call-deferred python-bridge-epc-process (read method) args)))
+  (if (python-bridge-epc-live-p python-bridge-epc-process)
+      (python-bridge-deferred-chain
+       (python-bridge-epc-call-deferred python-bridge-epc-process (read method) args))
+    (setq python-bridge-first-call-method method)
+    (setq python-bridge-first-call-args args)
+    (python-bridge-start-process)))
 
 (defvar python-bridge-is-starting nil)
+(defvar python-bridge-first-call-method nil)
+(defvar python-bridge-first-call-args nil)
 
 (defun python-bridge-restart-process ()
   "Stop and restart Python-Bridge process."
@@ -178,11 +184,11 @@ Then Python-Bridge will start by gdb, please send new issue with `*python-bridge
     ;; start epc server and set `python-bridge-server-port'
     (python-bridge--start-epc-server)
     (let* ((python-bridge-args (append
-                            (list python-bridge-python-file)
-                            (list (number-to-string python-bridge-server-port))
-                            (when python-bridge-enable-profile
-                              (list "profile"))
-                            )))
+                                (list python-bridge-python-file)
+                                (list (number-to-string python-bridge-server-port))
+                                (when python-bridge-enable-profile
+                                  (list "profile"))
+                                )))
 
       ;; Set process arguments.
       (if python-bridge-enable-debug
@@ -231,14 +237,24 @@ Then Python-Bridge will start by gdb, please send new issue with `*python-bridge
   "Call `python-bridge--open-internal' upon receiving `start_finish' signal from server."
   ;; Make EPC process.
   (setq python-bridge-epc-process (make-python-bridge-epc-manager
-                               :server-process python-bridge-internal-process
-                               :commands (cons python-bridge-internal-process-prog python-bridge-internal-process-args)
-                               :title (mapconcat 'identity (cons python-bridge-internal-process-prog python-bridge-internal-process-args) " ")
-                               :port python-bridge-epc-port
-                               :connection (python-bridge-epc-connect "localhost" python-bridge-epc-port)
-                               ))
+                                   :server-process python-bridge-internal-process
+                                   :commands (cons python-bridge-internal-process-prog python-bridge-internal-process-args)
+                                   :title (mapconcat 'identity (cons python-bridge-internal-process-prog python-bridge-internal-process-args) " ")
+                                   :port python-bridge-epc-port
+                                   :connection (python-bridge-epc-connect "localhost" python-bridge-epc-port)
+                                   ))
   (python-bridge-epc-init-epc-layer python-bridge-epc-process)
   (setq python-bridge-is-starting nil)
+
+  (when (and python-bridge-first-call-method
+             python-bridge-first-call-args)
+    (python-bridge-deferred-chain
+     (python-bridge-epc-call-deferred python-bridge-epc-process
+                                      (read python-bridge-first-call-method)
+                                      python-bridge-first-call-args)
+     (setq python-bridge-first-call-method nil)
+     (setq python-bridge-first-call-args nil)
+     ))
 
   (message "*******"))
 
