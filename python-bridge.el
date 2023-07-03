@@ -241,7 +241,7 @@ Then Python-Bridge will start by gdb, please send new issue with `*python-bridge
                                    :commands (cons python-bridge-internal-process-prog python-bridge-internal-process-args)
                                    :title (mapconcat 'identity (cons python-bridge-internal-process-prog python-bridge-internal-process-args) " ")
                                    :port python-bridge-epc-port
-                                   :connection (python-bridge-epc-connect "localhost" python-bridge-epc-port)
+                                   :connection (python-bridge-epc-connect "127.0.0.1" python-bridge-epc-port)
                                    ))
   (python-bridge-epc-init-epc-layer python-bridge-epc-process)
   (setq python-bridge-is-starting nil)
