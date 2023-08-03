@@ -54,11 +54,6 @@ class PythonBridge:
         self.event_loop = threading.Thread(target=self.event_dispatcher)
         self.event_loop.start()
 
-        # All LSP server response running in message_thread.
-        self.message_queue = queue.Queue()
-        self.message_thread = threading.Thread(target=self.message_dispatcher)
-        self.message_thread.start()
-
         # Pass epc port and webengine codec information to Emacs when first start python-bridge.
         eval_in_emacs('python-bridge--first-start', self.server.server_address[1])
 
@@ -69,29 +64,8 @@ class PythonBridge:
         try:
             while True:
                 message = self.event_queue.get(True)
-            
-                if message["name"] == "open_file":
-                    self._open_file(message["content"])
-                elif message["name"] == "close_file":
-                    self._close_file(message["content"])
-                elif message["name"] == "action_func":
-                    (func_name, func_args) = message["content"]
-                    getattr(self, func_name)(*func_args)
-            
+                print("**** ", message)
                 self.event_queue.task_done()
-        except:
-            logger.error(traceback.format_exc())
-
-    def message_dispatcher(self):
-        try:
-            while True:
-                message = self.message_queue.get(True)
-                if message["name"] == "server_process_exit":
-                    self.handle_server_process_exit(message["content"])
-                else:
-                    logger.error("Unhandled python-bridge message: %s" % message)
-            
-                self.message_queue.task_done()
         except:
             logger.error(traceback.format_exc())
 
