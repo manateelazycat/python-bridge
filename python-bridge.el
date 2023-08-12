@@ -162,7 +162,7 @@ Then Python-Bridge will start by gdb, please send new issue with `*python-bridge
        (python-bridge-epc-call-deferred python-bridge-epc-process (read method) args))
     (setq python-bridge-first-call-method method)
     (setq python-bridge-first-call-args args)
-    (python-bridge-start-process)))
+    ))
 
 (defvar python-bridge-first-call-method nil)
 (defvar python-bridge-first-call-args nil)
