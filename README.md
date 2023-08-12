@@ -14,6 +14,7 @@ It has been successfully applied to plugins such as [EAF](https://github.com/ema
 (add-to-list 'load-path "<path-to-python-bridge>")
 
 (require 'python-bridge)
+(python-bridge-enable)
 ```
 
 ### Usage

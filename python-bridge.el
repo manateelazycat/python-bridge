@@ -7,8 +7,8 @@
 ;; Copyright (C) 2018, Andy Stewart, all rights reserved.
 ;; Created: 2018-06-15 14:10:12
 ;; Version: 0.5
-;; Last-Updated: 2022-10-10 15:23:53 +0800
-;;           By: Gong Qijian
+;; Last-Updated: 2023-08-12 21:08:48
+;;           By: Andy Stewart
 ;; URL: https://github.com/manateelazycat/python-bridge
 ;; Keywords:
 ;; Compatibility: emacs-version >= 28
@@ -164,23 +164,20 @@ Then Python-Bridge will start by gdb, please send new issue with `*python-bridge
     (setq python-bridge-first-call-args args)
     (python-bridge-start-process)))
 
-(defvar python-bridge-is-starting nil)
 (defvar python-bridge-first-call-method nil)
 (defvar python-bridge-first-call-args nil)
 
 (defun python-bridge-restart-process ()
   "Stop and restart Python-Bridge process."
   (interactive)
-  (setq python-bridge-is-starting nil)
-
   (python-bridge-kill-process)
   (python-bridge-start-process)
   (message "[Python-Bridge] Process restarted."))
 
 (defun python-bridge-start-process ()
   "Start Python-Bridge process if it isn't started."
-  (setq python-bridge-is-starting t)
-  (unless (python-bridge-epc-live-p python-bridge-epc-process)
+  (if (python-bridge-epc-live-p python-bridge-epc-process)
+      (remove-hook 'post-command-hook #'python-bridge-start-process)
     ;; start epc server and set `python-bridge-server-port'
     (python-bridge--start-epc-server)
     (let* ((python-bridge-args (append
@@ -244,7 +241,6 @@ Then Python-Bridge will start by gdb, please send new issue with `*python-bridge
                                    :connection (python-bridge-epc-connect "127.0.0.1" python-bridge-epc-port)
                                    ))
   (python-bridge-epc-init-epc-layer python-bridge-epc-process)
-  (setq python-bridge-is-starting nil)
 
   (when (and python-bridge-first-call-method
              python-bridge-first-call-args)
@@ -258,8 +254,8 @@ Then Python-Bridge will start by gdb, please send new issue with `*python-bridge
 
   (message "*******"))
 
-(unless python-bridge-is-starting
-  (python-bridge-start-process))
+(defun python-bridge-enable ()
+  (add-hook 'post-command-hook #'python-bridge-start-process))
 
 (provide 'python-bridge)
 

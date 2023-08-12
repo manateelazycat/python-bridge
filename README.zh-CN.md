@@ -14,6 +14,7 @@ Python Bridge 是一个基于 [emacs-epc](https://github.com/kiwanami/emacs-epc)
 (add-to-list 'load-path "<path-to-python-bridge>")
 
 (require 'python-bridge)
+(python-bridge-enable)
 ```
 
 ### 使用
