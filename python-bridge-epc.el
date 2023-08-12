@@ -693,7 +693,7 @@ This variable is used for the management purpose.")
 
 (defun python-bridge-epc-server-accept (process)
   "[internal] Initialize the process and return python-bridge-epc-manager object."
-  (python-bridge-epc-log "LSPBRIDGE-EPC-SERVER- >> Connection accept: %S" process)
+  (python-bridge-epc-log "PYTHONBRIDGE-EPC-SERVER- >> Connection accept: %S" process)
   (let* ((connection-id (python-bridge-epc-uid))
          (connection-name (format "python-bridge-epc con %s" connection-id))
          (channel (list connection-name nil))
@@ -702,7 +702,7 @@ This variable is used for the management purpose.")
                       :process process
                       :buffer (process-buffer process)
                       :channel channel)))
-    (python-bridge-epc-log "LSPBRIDGE-EPC-SERVER- >> Connection establish")
+    (python-bridge-epc-log "PYTHONBRIDGE-EPC-SERVER- >> Connection establish")
     (set-process-coding-system process 'binary 'binary)
     (set-process-filter process
                         (lambda (p m)
@@ -716,7 +716,7 @@ This variable is used for the management purpose.")
 
 (defun python-bridge-epc-server-sentinel (process message connect-function)
   "[internal] Process sentinel handler for the server process."
-  (python-bridge-epc-log "LSPBRIDGE-EPC-SERVER- SENTINEL: %S %S" process message)
+  (python-bridge-epc-log "PYTHONBRIDGE-EPC-SERVER- SENTINEL: %S %S" process message)
   (let ((mngr (python-bridge-epc-server-get-manager-by-process process)))
     (cond
      ;; new connection
@@ -728,8 +728,8 @@ This variable is used for the management purpose.")
             (when connect-function (funcall connect-function mngr))
             mngr)
         ('error
-         (python-bridge-epc-log "LSPBRIDGE-EPC-SERVER- Protocol error: %S" err)
-         (python-bridge-epc-log "LSPBRIDGE-EPC-SERVER- ABORT %S" process)
+         (python-bridge-epc-log "PYTHONBRIDGE-EPC-SERVER- Protocol error: %S" err)
+         (python-bridge-epc-log "PYTHONBRIDGE-EPC-SERVER- ABORT %S" process)
          (delete-process process))))
      ;; ignore
      ((null mngr) nil )
@@ -737,7 +737,7 @@ This variable is used for the management purpose.")
      (t
       (let ((pair (assq process python-bridge-epc-server-client-processes)) _d)
         (when pair
-          (python-bridge-epc-log "LSPBRIDGE-EPC-SERVER- DISCONNECT %S" process)
+          (python-bridge-epc-log "PYTHONBRIDGE-EPC-SERVER- DISCONNECT %S" process)
           (python-bridge-epc-stop-epc (cdr pair))
           (setq python-bridge-epc-server-client-processes
                 (assq-delete-all process python-bridge-epc-server-client-processes))

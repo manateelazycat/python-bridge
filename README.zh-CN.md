@@ -58,10 +58,11 @@ Python 多线程的方法请 Google `Python threading` 学习怎么使用 Python
 1. 搜索 python-bridge 目录下所有的 `python-bridge` 关键字， 替换成 `python-hello`
 2. 搜索 python-bridge 目录下所有的 `python_bridge` 关键字， 替换成 `python_hello`
 3. 搜索 python-bridge 目录下所有的 `PythonBridge` 关键字， 替换成 `PythonHello`
-4. 把文件名 `python-bridge-epc.el` 改成 `python-hello-epc.el`
-5. 把文件名 `python-bridge.el` 改成 `python-hello.el`
-6. 把文件名 `python_bridge.py` 改成 `python_hello.py`
-7. 最后， `(require 'python-hello)` 即可
+4. 搜索 python-bridge 目录下所有的 `PYTHONBRIDGE-EPC-SERVER` 关键字， 替换成 `PYTHONHELLO-EPC-SERVER`
+5. 把文件名 `python-bridge-epc.el` 改成 `python-hello-epc.el`
+6. 把文件名 `python-bridge.el` 改成 `python-hello.el`
+7. 把文件名 `python_bridge.py` 改成 `python_hello.py`
+8. 最后， `(require 'python-hello)` 即可
 
 之所以要进行重命名， 是希望基于 `python-bridge` 构建的插件可以有自己的命名空间， 不要相互干扰。
 

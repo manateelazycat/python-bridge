@@ -58,10 +58,11 @@ For example, if I want to build a plugin called `python-hello`, here are my comm
 1. Search for all `python-bridge` keywords in the python-bridge directory and replace them with `python-hello`
 2. Search for all `python_bridge` keywords in the python-bridge directory and replace them with `python_hello`
 3. Search for all `PythonBridge` keywords in the python-bridge directory and replace them with `PythonHello`
-4. Change the file name `python-bridge-epc.el` to `python-hello-epc.el`
-5. Change the file name `python-bridge.el` to `python-hello.el`
-6. Change the file name `python_bridge.py` to `python_hello.py`
-7. Finally, `(require 'python-hello)` is enough
+4. Search for all `PYTHONBRIDGE-EPC-SERVER` keywords in the python-bridge directory, replace with `PYTHONHELLO-EPC-SERVER`
+5. Change the file name `python-bridge-epc.el` to `python-hello-epc.el`
+6. Change the file name `python-bridge.el` to `python-hello.el`
+7. Change the file name `python_bridge.py` to `python_hello.py`
+8. Finally, `(require 'python-hello)` is enough
 
 The reason for renaming is to hope that plugins built based on `python-bridge` can have their own namespace and do not interfere with each other.
 
