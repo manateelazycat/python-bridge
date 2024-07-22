@@ -49,6 +49,19 @@ from utils import *
 eval_in_emacs("message", "hello from python-bridge")
 ```
 
+**Emacs side gets the return value of Python functions**:
+```python
+# Define this function in class PythonBridge.
+def echo(self, msg1, msg2):
+        eval_in_emacs("message", "%s %s", msg1, msg2)
+        return 1
+```
+
+```elisp
+(python-bridge-call--sync "echo" "hello" "world") ; Will return value 1 from Python function
+```
+Notice: Such Python function shouldn't use sync type python functions who call epc_client.call_sync(). Or there will be deadlock.
+
 **Python multithreading**:
 Please Google `Python threading` to learn how to use Python to write multithreaded code.
 

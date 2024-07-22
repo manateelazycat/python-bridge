@@ -50,15 +50,16 @@ class PythonBridge:
         self.server_thread.start()
         
         # All Emacs request running in event_loop.
-        self.event_queue = queue.Queue()
-        self.event_loop = threading.Thread(target=self.event_dispatcher)
-        self.event_loop.start()
+        # self.event_queue = queue.Queue()
+        # self.event_loop = threading.Thread(target=self.event_dispatcher)
+        # self.event_loop.start()
 
         # Pass epc port and webengine codec information to Emacs when first start python-bridge.
         eval_in_emacs('python-bridge--first-start', self.server.server_address[1])
 
         # event_loop never exit, simulation event loop.
-        self.event_loop.join()
+        # self.event_loop.join()
+        self.server_thread.join()
 
     def event_dispatcher(self):
         try:

@@ -164,6 +164,13 @@ Then Python-Bridge will start by gdb, please send new issue with `*python-bridge
     (setq python-bridge-first-call-args args)
     ))
 
+(defun python-bridge-call--sync (method &rest args)
+  "Call Python EPC function METHOD and ARGS synchronously."
+  (if (python-bridge-epc-live-p python-bridge-epc-process)
+      (python-bridge-epc-call-sync python-bridge-epc-process (read method) args)
+    (message "python-bridge not started.")
+    ))
+
 (defvar python-bridge-first-call-method nil)
 (defvar python-bridge-first-call-args nil)
 
