@@ -49,6 +49,19 @@ from utils import *
 eval_in_emacs("message", "hello from python-bridge")
 ```
 
+**Emacs 端调用 Python 方法**:
+```python
+# 在 class PythonBridge 中添加此测试方法
+def echo(self, msg1, msg2):
+        eval_in_emacs("message", "%s %s", msg1, msg2)
+        return 1
+```
+
+```elisp
+(python-bridge-call--sync "echo" "hello" "world") ; 在 Emacs 执行之后返回 1
+```
+注意：这类 Python 函数，如测试方法 echo，不能使用基于 epc_client.call_sync() 实现的方法（如 get_emacs_func_result），否则会导致死锁。
+
 **Python 多线程**:
 Python 多线程的方法请 Google `Python threading` 学习怎么使用 Python 来编写多线程代码。
 
